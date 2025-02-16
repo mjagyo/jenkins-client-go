@@ -13,6 +13,8 @@ func (c *Client) GetJobs(authToken *string) (*Jobs, error) {
 		return nil, err
 	}
 
+	fmt.Println(" --------- ")
+
 	body, err := c.doRequest(req, authToken)
 	if err != nil {
 		return nil, err

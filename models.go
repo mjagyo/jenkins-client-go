@@ -10,7 +10,7 @@ type Job struct {
 	FullName    string `json:"fullName"`
 	Name        string `json:"name"`
 	URL         string `json:"url"`
-	Buildable   string `json:"buildable"`
+	Buildable   bool   `json:"buildable"`
 	Color       string `json:"color"`
 	InQueue     bool   `json:"inQueue"`
 }

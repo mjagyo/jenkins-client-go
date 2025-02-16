@@ -8,20 +8,25 @@ import (
 )
 
 // HostURL - Default Hashicups URL
-const HostURL string = "http://localhost:19090"
+const HostURL string = "http://localhost:8080"
 
 // Client -
 type Client struct {
-	HostURL    string
-	HTTPClient *http.Client
-	Token      string
-	Auth       AuthStruct
+	HostURL       string
+	HTTPClient    *http.Client
+	Token         string
+	Auth          AuthStruct
+	Authenticated TokenVerify
+}
+
+type TokenVerify struct {
+	Authenticated bool `json:"authenticated"`
 }
 
 // AuthStruct -
 type AuthStruct struct {
 	Username string `json:"username"`
-	Password string `json:"password"`
+	Token    string `json:"token"`
 }
 
 // AuthResponse -
@@ -32,7 +37,7 @@ type AuthResponse struct {
 }
 
 // NewClient -
-func NewClient(host, username, password *string) (*Client, error) {
+func NewClient(host, username, token *string) (*Client, error) {
 	c := Client{
 		HTTPClient: &http.Client{Timeout: 10 * time.Second},
 		// Default Hashicups URL
@@ -43,22 +48,24 @@ func NewClient(host, username, password *string) (*Client, error) {
 		c.HostURL = *host
 	}
 
-	// If username or password not provided, return empty client
-	if username == nil || password == nil {
+	// If username or token not provided, return empty client
+	if username == nil || token == nil {
 		return &c, nil
 	}
 
 	c.Auth = AuthStruct{
 		Username: *username,
-		Password: *password,
+		Token:    *token,
 	}
 
-	ar, err := c.SignIn()
+	ar, err := c.Verify()
 	if err != nil {
 		return nil, err
 	}
 
-	c.Token = ar.Token
+	c.Authenticated = TokenVerify{
+		Authenticated: ar.Authenticated,
+	}
 
 	return &c, nil
 }

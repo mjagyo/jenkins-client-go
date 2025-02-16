@@ -1,6 +1,7 @@
 package hashicups
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -10,7 +11,7 @@ import (
 
 // Sign up - Create new user, return user token upon successful creation
 func (c *Client) SignUp(auth AuthStruct) (*AuthResponse, error) {
-	if auth.Username == "" || auth.Password == "" {
+	if auth.Username == "" || auth.Token == "" {
 		return nil, fmt.Errorf("define username and password")
 	}
 	rb, err := json.Marshal(auth)
@@ -37,27 +38,28 @@ func (c *Client) SignUp(auth AuthStruct) (*AuthResponse, error) {
 	return &ar, nil
 }
 
-// SignIn - Get a new token for user
-func (c *Client) SignIn() (*AuthResponse, error) {
-	if c.Auth.Username == "" || c.Auth.Password == "" {
-		return nil, fmt.Errorf("define username and password")
+// Verify - Check the token that will be used
+func (c *Client) Verify() (*TokenVerify, error) {
+	if c.Auth.Username == "" || c.Auth.Token == "" {
+		return nil, fmt.Errorf("define username and token")
 	}
-	rb, err := json.Marshal(c.Auth)
+
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/whoAmI/api/json", c.HostURL), nil)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", fmt.Sprintf("%s/signin", c.HostURL), strings.NewReader(string(rb)))
-	if err != nil {
-		return nil, err
-	}
+	// Add Basic Authentication
+	auth := c.Auth.Username + ":" + c.Auth.Token
+	basicAuth := "Basic " + base64.StdEncoding.EncodeToString([]byte(auth))
+	req.Header.Add("Authorization", basicAuth)
 
 	body, err := c.doRequest(req, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	ar := AuthResponse{}
+	ar := TokenVerify{}
 	err = json.Unmarshal(body, &ar)
 	if err != nil {
 		return nil, err
@@ -68,7 +70,7 @@ func (c *Client) SignIn() (*AuthResponse, error) {
 
 // SignIn - Get a new token for user
 func (c *Client) GetUserTokenSignIn(auth AuthStruct) (*AuthResponse, error) {
-	if auth.Username == "" || auth.Password == "" {
+	if auth.Username == "" || auth.Token == "" {
 		return nil, fmt.Errorf("define username and password")
 	}
 	rb, err := json.Marshal(auth)

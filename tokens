@@ -1,0 +1,1 @@
+curl -u admin:1192adaa5b23e7a23abf0779cfca8cdc7c http://localhost:8080/whoAmI/api/json

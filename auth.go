@@ -59,6 +59,8 @@ func (c *Client) Verify() (*TokenVerify, error) {
 		return nil, err
 	}
 
+	fmt.Printf("----- %s body", body)
+
 	ar := TokenVerify{}
 	err = json.Unmarshal(body, &ar)
 	if err != nil {

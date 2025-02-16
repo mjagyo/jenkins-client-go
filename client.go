@@ -38,7 +38,7 @@ type AuthResponse struct {
 
 // NewClient -
 func NewClient(host, username, token *string) (*Client, error) {
-	c := &Client{
+	c := Client{
 		HTTPClient: &http.Client{Timeout: 10 * time.Second},
 		// Default Hashicups URL
 		HostURL: HostURL,
@@ -50,7 +50,7 @@ func NewClient(host, username, token *string) (*Client, error) {
 
 	// If username or token not provided, return empty client
 	if username == nil || token == nil {
-		return c, nil
+		return &c, nil
 	}
 
 	c.Auth = AuthStruct{
@@ -67,7 +67,7 @@ func NewClient(host, username, token *string) (*Client, error) {
 		Authenticated: ar.Authenticated,
 	}
 
-	return c, nil
+	return &c, nil
 }
 
 func (c *Client) doRequest(req *http.Request, authToken *string) ([]byte, error) {

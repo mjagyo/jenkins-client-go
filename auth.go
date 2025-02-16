@@ -1,4 +1,4 @@
-package hashicups
+package jenkins
 
 import (
 	"encoding/base64"

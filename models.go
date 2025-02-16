@@ -1,4 +1,4 @@
-package hashicups
+package jenkins
 
 // Order -
 type Order struct {

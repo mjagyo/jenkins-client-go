@@ -1,4 +1,4 @@
-package hashicups
+package jenkins
 
 import (
 	"fmt"

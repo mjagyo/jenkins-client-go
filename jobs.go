@@ -8,10 +8,10 @@ import (
 )
 
 // GetJobs - Returns list of jobs
-func (c *Client) GetJobs() ([]Jobs, error) {
+func (c *Client) GetJobs() (Jobs, error) {
 	req, err := http.NewRequest("GET", fmt.Sprintf("%s/api/json?tree=jobs[name,url,color,description,displayName,fullName,buildable,inQueue]", c.HostURL), nil)
 	if err != nil {
-		return nil, err
+		return Jobs{}, err
 	}
 
 	// Add Basic Authentication
@@ -21,13 +21,13 @@ func (c *Client) GetJobs() ([]Jobs, error) {
 
 	body, err := c.doRequest(req, nil)
 	if err != nil {
-		return nil, err
+		return Jobs{}, err
 	}
 
-	jobs := []Jobs{}
+	var jobs Jobs
 	err = json.Unmarshal(body, &jobs)
 	if err != nil {
-		return nil, err
+		return Jobs{}, err
 	}
 
 	return jobs, nil

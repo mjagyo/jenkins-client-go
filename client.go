@@ -71,7 +71,7 @@ func NewClient(host, username, token *string) (*Client, error) {
 }
 
 func (c *Client) doRequest(req *http.Request, authToken *string) ([]byte, error) {
-	fmt.Println(" c.doRequest =-======  ")
+	fmt.Printf("--- %v c.doRequest =-======  ", c)
 	token := c.Token
 
 	if authToken != nil {

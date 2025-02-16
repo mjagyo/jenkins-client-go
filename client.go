@@ -74,10 +74,6 @@ func (c *Client) doRequest(req *http.Request, authToken *string) ([]byte, error)
 	fmt.Printf("--- %v c.doRequest =-======  %v", c, authToken)
 	token := c.Token
 
-	if authToken != nil {
-		token = *authToken
-	}
-
 	fmt.Printf("should run here")
 
 	req.Header.Set("Authorization", token)

@@ -94,6 +94,7 @@ func (c *Client) doRequest(req *http.Request, authToken *string) ([]byte, error)
 	if err != nil {
 		return nil, err
 	}
+	fmt.Printf(" ccccc %v ccccc err %v", body, err)
 
 	// if res.StatusCode != http.StatusOK {
 	// 	return nil, fmt.Errorf("status: %d, body: %s", res.StatusCode, body)

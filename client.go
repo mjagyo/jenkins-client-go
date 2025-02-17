@@ -84,9 +84,13 @@ func (c *Client) doRequest(req *http.Request, authToken *string) ([]byte, error)
 	if err != nil {
 		return nil, err
 	}
+	fmt.Printf(" Bbbbbbb ")
 	defer res.Body.Close()
 
+	fmt.Printf(" Aaaaa ")
 	body, err := io.ReadAll(res.Body)
+
+	fmt.Printf(" !!! %v !!! err %v", body, err)
 	if err != nil {
 		return nil, err
 	}

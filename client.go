@@ -1,6 +1,7 @@
 package jenkins
 
 import (
+	"encoding/base64"
 	"fmt"
 	"io"
 	"net/http"
@@ -16,6 +17,7 @@ type Client struct {
 	HTTPClient    *http.Client
 	Token         string
 	Auth          AuthStruct
+	Base64Token   string
 	Authenticated TokenVerify
 }
 
@@ -63,14 +65,20 @@ func NewClient(host, username, token *string) (*Client, error) {
 		return nil, err
 	}
 
+	credentials := c.Auth.Username + ":" + c.Auth.Token
+
+	encodedCredentials := base64.StdEncoding.EncodeToString([]byte(credentials))
+
 	c.Authenticated = TokenVerify{
 		Authenticated: ar.Authenticated,
 	}
 
+	c.Base64Token = encodedCredentials
+
 	return &c, nil
 }
 func (c *Client) doRequest(req *http.Request, authToken *string) ([]byte, error) {
-	token := c.Token
+	token := c.Base64Token
 
 	if authToken != nil {
 		token = *authToken

@@ -69,37 +69,29 @@ func NewClient(host, username, token *string) (*Client, error) {
 
 	return &c, nil
 }
-
 func (c *Client) doRequest(req *http.Request, authToken *string) ([]byte, error) {
-	fmt.Printf("--- %v c.doRequest =-======  %v", c, authToken)
 	token := c.Token
 
-	fmt.Printf("should run here")
+	if authToken != nil {
+		token = *authToken
+	}
 
 	req.Header.Set("Authorization", token)
 
 	res, err := c.HTTPClient.Do(req)
-
-	fmt.Printf(" ---- %v ---- err %v", res, err)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf(" Bbbbbbb ")
 	defer res.Body.Close()
 
-	fmt.Printf(" Aaaaa ")
 	body, err := io.ReadAll(res.Body)
-
-	fmt.Printf(" !!! %v !!! err %v", body, err)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf(" ccccc %v ccccc err %v", body, err)
 
-	// if res.StatusCode != http.StatusOK {
-	// 	return nil, fmt.Errorf("status: %d, body: %s", res.StatusCode, body)
-	// }
+	if res.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("status: %d, body: %s", res.StatusCode, body)
+	}
 
-	return body, nil
-	// return nil, nil
+	return body, err
 }

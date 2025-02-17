@@ -78,14 +78,11 @@ func NewClient(host, username, token *string) (*Client, error) {
 	return &c, nil
 }
 func (c *Client) doRequest(req *http.Request, authToken *string) ([]byte, error) {
-	fmt.Println(" doing request ")
 	token := c.Base64Token
 
 	if authToken != nil {
 		token = *authToken
 	}
-
-	fmt.Printf("aaa %s ---------- ", token)
 
 	req.Header.Set("Authorization", "Basic "+token)
 

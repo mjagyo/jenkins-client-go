@@ -79,6 +79,8 @@ func (c *Client) doRequest(req *http.Request, authToken *string) ([]byte, error)
 	req.Header.Set("Authorization", token)
 
 	res, err := c.HTTPClient.Do(req)
+
+	fmt.Printf(" ---- %v ---- err %v", res, err)
 	if err != nil {
 		return nil, err
 	}

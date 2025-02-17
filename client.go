@@ -2,6 +2,7 @@ package jenkins
 
 import (
 	"fmt"
+	"io"
 	"net/http"
 	"time"
 )
@@ -77,21 +78,21 @@ func (c *Client) doRequest(req *http.Request, authToken *string) ([]byte, error)
 
 	req.Header.Set("Authorization", token)
 
-	// res, err := c.HTTPClient.Do(req)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// defer res.Body.Close()
+	res, err := c.HTTPClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer res.Body.Close()
 
-	// body, err := io.ReadAll(res.Body)
-	// if err != nil {
-	// 	return nil, err
-	// }
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
 
 	// if res.StatusCode != http.StatusOK {
 	// 	return nil, fmt.Errorf("status: %d, body: %s", res.StatusCode, body)
 	// }
 
-	// return body, err
-	return nil, nil
+	return body, nil
+	// return nil, nil
 }

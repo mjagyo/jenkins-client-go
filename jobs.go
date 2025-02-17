@@ -20,10 +20,6 @@ func (c *Client) GetJobs(authToken *string) (*Jobs, error) {
 		return nil, err
 	}
 
-	if err != nil {
-		return nil, err
-	}
-
 	var jobs *Jobs
 	err = json.Unmarshal(body, &jobs)
 	if err != nil {
